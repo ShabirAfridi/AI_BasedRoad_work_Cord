@@ -31,6 +31,7 @@ public class AdminService {
     private final ConflictDetectionService conflictDetectionService;
     private final NotificationService      notificationService;
     private final WorkRequestService       workRequestService;
+    private final AuditLogService          auditLogService;
 
     // ─────────────────────────────────────────────────────────────
     // GET ALL WORK REQUESTS — admin sees everything
@@ -97,6 +98,7 @@ public class AdminService {
         WorkRequest saved = workRequestRepository.save(workRequest);
 
         log.info("Request {} approved by admin {}", requestId, adminUser.getEmail());
+        auditLogService.log(adminUser, "APPROVE_REQUEST", "WorkRequest", requestId, decision.getAdminRemarks());
 
         // Send approval email to the department
         notificationService.sendApprovalNotice(
@@ -147,6 +149,7 @@ public class AdminService {
         WorkRequest saved = workRequestRepository.save(workRequest);
 
         log.info("Request {} rejected by admin {}", requestId, adminUser.getEmail());
+        auditLogService.log(adminUser, "REJECT_REQUEST", "WorkRequest", requestId, decision.getAdminRemarks());
 
         // Send rejection email with the admin's remarks
         notificationService.sendRejectionNotice(
@@ -204,6 +207,7 @@ public class AdminService {
 
         log.info("Conflict {} resolved by admin {} with resolution {}",
                 conflictId, adminUser.getEmail(), decision.getResolution());
+        auditLogService.log(adminUser, "RESOLVE_CONFLICT", "Conflict", conflictId, "Resolution: " + decision.getResolution());
 
         // Return updated conflict
         Conflict updated = conflictRepository.findById(conflictId).orElseThrow();
@@ -229,8 +233,9 @@ public class AdminService {
         workRequest.setReviewedBy(adminUser);
         workRequest.setReviewedAt(LocalDateTime.now());
 
-        return workRequestService.toResponse(workRequestRepository.save(workRequest));
-    }
+        WorkRequest saved = workRequestRepository.save(workRequest);
+        auditLogService.log(adminUser, "MARK_IN_PROGRESS", "WorkRequest", requestId, null);
+        return workRequestService.toResponse(saved);    }
 
     // ─────────────────────────────────────────────────────────────
     // MARK COMPLETED
@@ -251,7 +256,9 @@ public class AdminService {
         workRequest.setReviewedBy(adminUser);
         workRequest.setReviewedAt(LocalDateTime.now());
 
-        return workRequestService.toResponse(workRequestRepository.save(workRequest));
+        WorkRequest saved = workRequestRepository.save(workRequest);
+        auditLogService.log(adminUser, "MARK_COMPLETED", "WorkRequest", requestId, null);
+        return workRequestService.toResponse(saved);
     }
 
     // ─────────────────────────────────────────────────────────────

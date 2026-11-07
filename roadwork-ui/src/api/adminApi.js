@@ -30,10 +30,10 @@ export const resolveConflict = (id, resolution, adminRemarks, rejectRequestId) =
     adminRemarks,
     rejectRequestId,
   })
+}
 // ── COMPLAINTS ────────────────────────────────────────────────
 export const getAllComplaints = () => api.get('/api/admin/complaints')
 export const getSubmittedComplaints = () => api.get('/api/admin/complaints/submitted')
 export const markComplaintUnderReview = (id) => api.put(`/api/admin/complaints/${id}/review`)
 export const resolveComplaintAdmin = (id, adminResponse, dismiss) =>
   api.put(`/api/admin/complaints/${id}/resolve`, { adminResponse, dismiss })
-}

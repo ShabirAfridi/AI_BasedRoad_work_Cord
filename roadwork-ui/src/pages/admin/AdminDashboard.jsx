@@ -19,6 +19,7 @@ import {
      getSubmittedComplaints,
      markComplaintUnderReview,
 } from '../../api/adminApi'
+import { getAuditLogs } from '../../api/auditLogApi'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('requests')
@@ -34,6 +35,7 @@ function AdminDashboard() {
 const [complaints, setComplaints] = useState([])
 const [complaintFilter, setComplaintFilter] = useState('SUBMITTED')
 const [selectedComplaint, setSelectedComplaint] = useState(null)
+  const [auditLogs, setAuditLogs] = useState([])
 
   useEffect(() => {
     loadData()
@@ -64,8 +66,13 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
          : getAllComplaints()
 
      call
-       .then(res => setComplaints(res.data.data || []))
-       .finally(() => setLoading(false))
+         .then(res => setComplaints(res.data.data || []))
+         .finally(() => setLoading(false))
+
+   } else if (activeTab === 'auditLog') {
+     getAuditLogs()
+         .then(res => setAuditLogs(res.data.data || []))
+         .finally(() => setLoading(false))
    }
  }
  const handleMarkUnderReview = async (id) => {
@@ -153,6 +160,13 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                 {complaints.filter(c => c.status === 'SUBMITTED').length}
               </span>
             )}
+          </button>
+
+          <button
+              style={activeTab === 'auditLog' ? styles.mainTabActive : styles.mainTab}
+              onClick={() => setActiveTab('auditLog')}
+          >
+            Audit Log
           </button>
         </div>
 
@@ -345,6 +359,43 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
               </div>
             )}
           </>
+        )}
+
+        {activeTab === 'auditLog' && (
+            loading ? (
+                <div style={styles.emptyState}>Loading...</div>
+            ) : auditLogs.length === 0 ? (
+                <div style={styles.emptyState}>No actions logged yet</div>
+            ) : (
+                <div style={styles.tableWrapper}>
+                  <table style={styles.table}>
+                    <thead>
+                    <tr>
+                      <th style={styles.th}>When</th>
+                      <th style={styles.th}>Admin</th>
+                      <th style={styles.th}>Action</th>
+                      <th style={styles.th}>On</th>
+                      <th style={styles.th}>Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {auditLogs.map(entry => (
+                        <tr key={entry.id} style={styles.tr}>
+                          <td style={styles.td}>
+                            {entry.createdAt ? new Date(entry.createdAt).toLocaleString() : ''}
+                          </td>
+                          <td style={styles.td}>{entry.actorEmail}</td>
+                          <td style={styles.td}>{entry.action.replace(/_/g, ' ')}</td>
+                          <td style={styles.td}>
+                            {entry.entityType ? `${entry.entityType} #${entry.entityId}` : '—'}
+                          </td>
+                          <td style={styles.td}>{entry.details || '—'}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                  </table>
+                </div>
+            )
         )}
       </div>
 
