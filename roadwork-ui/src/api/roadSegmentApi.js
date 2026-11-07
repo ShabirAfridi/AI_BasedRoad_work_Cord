@@ -6,6 +6,8 @@ export const getRoadSegments = () => {
   return api.get('/api/public/road-segments')
 }
 
+export const createRoadSegment = (data) => api.post('/api/admin/road-segments', data)
+export const getAllRoadSegments = () => api.get('/api/admin/road-segments')
 
 
 

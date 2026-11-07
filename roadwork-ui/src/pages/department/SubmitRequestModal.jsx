@@ -12,6 +12,8 @@ const WORK_TYPES = [
 
 function SubmitRequestModal({ onClose, onSuccess }) {
   const [roadSegments, setRoadSegments] = useState([])
+  const [segmentsLoading, setSegmentsLoading] = useState(false)
+  const [roadSegmentsError, setRoadSegmentsError] = useState('')
   const [formData, setFormData] = useState({
     roadSegmentId: '',
     workType: 'WATER_PIPE',
@@ -32,7 +34,7 @@ function SubmitRequestModal({ onClose, onSuccess }) {
     setRoadSegmentsError("")
     getRoadSegments()
       .then(res =>{
-      const list = res.data;
+      const list = res.data.data || [];
       setRoadSegments(list);
       if(list.length===0){
       setRoadSegmentsError(

@@ -1,17 +1,9 @@
 // src/pages/auth/RegisterPage.jsx
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-
-// Department list matches seed data in V1__init_schema.sql
-const DEPARTMENTS = [
-  { id: 1, name: 'WAPDA' },
-  { id: 2, name: 'PTCL' },
-  { id: 3, name: 'SNGPL' },
-  { id: 4, name: 'CDA Municipality' },
-  { id: 5, name: 'Sewerage Board' },
-]
+import { getActiveDepartments } from '../../api/departmentApi'
 
 function RegisterPage() {
   const navigate = useNavigate()
@@ -26,6 +18,13 @@ function RegisterPage() {
   })
   const [error,   setError]   = useState('')
   const [loading, setLoading] = useState(false)
+  const [departments, setDepartments] = useState([])
+
+  useEffect(() => {
+    getActiveDepartments()
+        .then(res => setDepartments(res.data.data || []))
+        .catch(() => setDepartments([]))
+  }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -135,7 +134,7 @@ function RegisterPage() {
                 required
               >
                 <option value="">Select department</option>
-                {DEPARTMENTS.map(dept => (
+                {departments.map(dept => (
                   <option key={dept.id} value={dept.id}>
                     {dept.name}
                   </option>

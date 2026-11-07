@@ -20,6 +20,8 @@ import {
      markComplaintUnderReview,
 } from '../../api/adminApi'
 import { getAuditLogs } from '../../api/auditLogApi'
+import DepartmentsTab from './DepartmentsTab'
+import RoadSegmentsTab from './RoadSegmentsTab'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('requests')
@@ -167,6 +169,19 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
               onClick={() => setActiveTab('auditLog')}
           >
             Audit Log
+          </button>
+          <button
+              style={activeTab === 'departments' ? styles.mainTabActive : styles.mainTab}
+              onClick={() => setActiveTab('departments')}
+          >
+            Departments
+          </button>
+
+          <button
+              style={activeTab === 'roadSegments' ? styles.mainTabActive : styles.mainTab}
+              onClick={() => setActiveTab('roadSegments')}
+          >
+            Road Segments
           </button>
         </div>
 
@@ -397,6 +412,8 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                 </div>
             )
         )}
+        {activeTab === 'departments' && <DepartmentsTab />}
+        {activeTab === 'roadSegments' && <RoadSegmentsTab />}
       </div>
 
 
