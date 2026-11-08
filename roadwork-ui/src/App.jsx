@@ -9,6 +9,7 @@ import RegisterPage from './pages/auth/RegisterPage'
 import DepartmentDashboard from './pages/department/DepartmentDashboard'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import CitizenMapPage from './pages/citizen/CitizenMapPage'
+import InspectorDashboard from './pages/inspector/InspectorDashboard'
 
 const Unauthorized      = () => <h1 style={{padding:'2rem'}}>403 — You do not have access to this page</h1>
 
@@ -44,6 +45,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+            {/* Inspector routes — INSPECTOR role only */}
+            <Route
+                path="/inspector/dashboard"
+                element={
+                    <ProtectedRoute allowedRoles={['INSPECTOR']}>
+                        <InspectorDashboard />
+                    </ProtectedRoute>
+                }
+            />
 
           {/* Citizen routes — all logged in users */}
           <Route

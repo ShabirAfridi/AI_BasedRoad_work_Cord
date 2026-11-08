@@ -62,6 +62,7 @@ public class CitizenComplaintService {
                         ? request.getCategory() : ComplaintCategory.OTHER)
                 .status(ComplaintStatus.SUBMITTED)
                 .relatedRequest(relatedRequest)
+                .photoUrl(request.getPhotoUrl())
                 .build();
 
         CitizenComplaint saved = complaintRepository.save(complaint);
@@ -159,6 +160,7 @@ public class CitizenComplaintService {
                 .relatedRequestId(c.getRelatedRequest() != null
                         ? c.getRelatedRequest().getId() : null)
                 .adminResponse(c.getAdminResponse())
+                .photoUrl(c.getPhotoUrl())
                 .reportedAt(c.getReportedAt())
                 .resolvedAt(c.getResolvedAt())
                 .build();

@@ -27,6 +27,8 @@ public class WorkRequestResponse {
     private RequestStatus status;
     private Integer   priority;
     private String    adminRemarks;
+    private String documentUrl;
+    private String inspectorName;
     private LocalDateTime createdAt;
 
     // Latitude and longitude so Leaflet.js can place the map marker

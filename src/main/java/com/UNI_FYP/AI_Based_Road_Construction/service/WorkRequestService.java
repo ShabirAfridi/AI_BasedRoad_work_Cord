@@ -64,6 +64,7 @@ public class WorkRequestService {
                 .roadSegment(roadSegment)
                 .workType(request.getWorkType())
                 .description(request.getDescription())
+                .documentUrl(request.getDocumentUrl())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .priority(request.getPriority() != null ? request.getPriority() : 2)
@@ -231,6 +232,9 @@ public class WorkRequestService {
                 .city(w.getRoadSegment().getCity())
                 .workType(w.getWorkType())
                 .description(w.getDescription())
+                .documentUrl(w.getDocumentUrl())
+                .inspectorName(w.getAssignedInspector() != null
+                        ? w.getAssignedInspector().getFullName() : null)
                 .startDate(w.getStartDate())
                 .endDate(w.getEndDate())
                 .status(w.getStatus())

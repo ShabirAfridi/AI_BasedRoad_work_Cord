@@ -22,6 +22,9 @@ import {
 import { getAuditLogs } from '../../api/auditLogApi'
 import DepartmentsTab from './DepartmentsTab'
 import RoadSegmentsTab from './RoadSegmentsTab'
+import AssignInspectorCell from './AssignInspectorCell'
+import InspectionReportsTab from './InspectionReportsTab'
+import { getInspectors } from '../../api/inspectionApi'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('requests')
@@ -38,15 +41,16 @@ const [complaints, setComplaints] = useState([])
 const [complaintFilter, setComplaintFilter] = useState('SUBMITTED')
 const [selectedComplaint, setSelectedComplaint] = useState(null)
   const [auditLogs, setAuditLogs] = useState([])
+  const [inspectors, setInspectors] = useState([])
 
-  useEffect(() => {
-    loadData()
-  }, [activeTab, conflictFilter,complaintFilter])
 
  const loadData = () => {
    setLoading(true)
 
    if (activeTab === 'requests') {
+     getInspectors()
+         .then(res => setInspectors(res.data.data || []))
+         .catch(() => setInspectors([]))
      getAllRequestsAdmin()
        .then(res => setRequests(res.data.data || []))
        .finally(() => setLoading(false))
@@ -77,6 +81,11 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
          .finally(() => setLoading(false))
    }
  }
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, conflictFilter, complaintFilter])
  const handleMarkUnderReview = async (id) => {
    try {
      await markComplaintUnderReview(id)
@@ -183,6 +192,12 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
           >
             Road Segments
           </button>
+          <button
+              style={activeTab === 'inspections' ? styles.mainTabActive : styles.mainTab}
+              onClick={() => setActiveTab('inspections')}
+          >
+            Inspections
+          </button>
         </div>
 
         {activeTab === 'requests' && (
@@ -199,6 +214,7 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                     <th style={styles.th}>Road Segment</th>
                     <th style={styles.th}>Dates</th>
                     <th style={styles.th}>Document</th>
+                    <th style={styles.th}>Inspector</th>
                     <th style={styles.th}>Status</th>
                     <th style={styles.th}>Actions</th>
                   </tr>
@@ -219,6 +235,9 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                               />
                             </a>
                         ) : '—'}
+                      </td>
+                      <td style={styles.td}>
+                        <AssignInspectorCell request={req} inspectors={inspectors} onAssigned={loadData} />
                       </td>
                       <td style={styles.td}><StatusBadge status={req.status} /></td>
                       <td style={styles.td}>
@@ -438,6 +457,7 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
         )}
         {activeTab === 'departments' && <DepartmentsTab />}
         {activeTab === 'roadSegments' && <RoadSegmentsTab />}
+        {activeTab === 'inspections' && <InspectionReportsTab />}
       </div>
 
 

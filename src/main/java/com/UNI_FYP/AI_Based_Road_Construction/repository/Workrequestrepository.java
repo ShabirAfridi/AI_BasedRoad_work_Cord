@@ -59,6 +59,9 @@ public interface Workrequestrepository extends JpaRepository<WorkRequest,Long> {
     // Used in: Admin dashboard — "show all PENDING requests"
     List<WorkRequest> findByStatus(RequestStatus status);
 
+
+    List<WorkRequest> findByAssignedInspectorId(Long inspectorId);
+
     // Get all requests on a specific road segment
     // Used in: Map view — "show all work on Murree Road"
     List<WorkRequest> findByRoadSegmentId(Long roadSegmentId);

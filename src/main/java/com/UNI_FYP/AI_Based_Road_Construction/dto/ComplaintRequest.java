@@ -19,6 +19,7 @@ public class ComplaintRequest {
     private ComplaintCategory category;
     //optional - compliant is about specific work Request
      private Long relatedRequestId;
+    private String photoUrl;
 
 
 }

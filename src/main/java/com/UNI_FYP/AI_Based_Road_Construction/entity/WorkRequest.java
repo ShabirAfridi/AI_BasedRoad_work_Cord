@@ -68,9 +68,18 @@ public class WorkRequest {
     @Column(name = "admin_remarks", columnDefinition = "TEXT")
     private String adminRemarks;
 
+    @Column(name = "document_url", length = 500)
+    private String documentUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewed_by")
     private User reviewedBy;
+
+
+    // Inspector who verifies the finished work (assigned by admin)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_inspector_id")
+    private User assignedInspector;
 
     @Column(name = "reviewed_at")
     private LocalDateTime reviewedAt;

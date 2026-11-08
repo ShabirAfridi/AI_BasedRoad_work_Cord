@@ -21,6 +21,7 @@ public class ComplaintResponse {
     private ComplaintStatus status;
     private Long relatedRequestId;
     private String adminResponse;
+    private String photoUrl;
     private LocalDateTime reportedAt;
     private LocalDateTime resolvedAt;
 }

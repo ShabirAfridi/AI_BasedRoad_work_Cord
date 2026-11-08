@@ -31,4 +31,5 @@ public class WorkRequestRequest {
 
     // 1 = HIGH, 2 = NORMAL, 3 = LOW — defaults to NORMAL
     private Integer priority = 2;
+    private String documentUrl;
 }

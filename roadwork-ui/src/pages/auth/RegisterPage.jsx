@@ -7,8 +7,7 @@ import { getActiveDepartments } from '../../api/departmentApi'
 
 function RegisterPage() {
   const navigate = useNavigate()
-  const { register, isAdmin, isDepartmentUser } = useAuth()
-
+  const { register } = useAuth()
   const [formData, setFormData] = useState({
     fullName:     '',
     email:        '',
@@ -50,9 +49,10 @@ function RegisterPage() {
     setLoading(false)
 
     if (result.success) {
-      if (isAdmin())               navigate('/admin/dashboard')
-      else if (isDepartmentUser()) navigate('/department/dashboard')
-      else                         navigate('/citizen/map')
+      if (formData.role === 'ADMIN')                navigate('/admin/dashboard')
+      else if (formData.role === 'DEPARTMENT_USER') navigate('/department/dashboard')
+      else if (formData.role === 'INSPECTOR')       navigate('/inspector/dashboard')
+      else                                          navigate('/citizen/map')
     } else {
       setError(result.error)
     }
@@ -119,6 +119,7 @@ function RegisterPage() {
               <option value="CITIZEN">Citizen</option>
               <option value="DEPARTMENT_USER">Department User</option>
               <option value="ADMIN">Admin</option>
+              <option value="INSPECTOR">Inspector</option>
             </select>
           </div>
 

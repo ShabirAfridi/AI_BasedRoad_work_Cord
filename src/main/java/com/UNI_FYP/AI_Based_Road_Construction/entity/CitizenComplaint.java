@@ -52,6 +52,9 @@ public class CitizenComplaint {
     @Column(name = "admin_response", columnDefinition = "TEXT")
     private String adminResponse;
 
+    @Column(name = "photo_url", length = 500)
+    private String photoUrl;
+
     @CreationTimestamp
     @Column(name = "reported_at", updatable = false)
     private LocalDateTime reportedAt;

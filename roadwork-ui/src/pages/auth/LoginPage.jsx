@@ -30,6 +30,7 @@ function LoginPage() {
     const role = result.userObj.role
       if (role === 'ADMIN' )         navigate('/admin/dashboard')
       else if (role === 'DEPARTMENT_USER') navigate('/department/dashboard')
+      else if (role === 'INSPECTOR') navigate('/inspector/dashboard')
       else                    navigate('/citizen/map')
     } else {
       setError(result.error)
