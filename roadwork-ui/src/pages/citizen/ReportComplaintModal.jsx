@@ -1,6 +1,8 @@
 
 import { useState } from 'react'
 import { submitComplaint } from '../../api/complaintApi'
+import CameraCapture from '../../components/CameraCapture'
+import { uploadPhoto } from '../../api/uploadApi'
 
 const CATEGORIES = [
   { value: 'ILLEGAL_DIGGING',      label: 'Illegal Digging (no permit)' },
@@ -19,6 +21,7 @@ function ReportComplaintModal({ roadSegments, onClose, onSuccess }) {
   const [error, setError]     = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [photo, setPhoto] = useState(null)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -35,9 +38,15 @@ function ReportComplaintModal({ roadSegments, onClose, onSuccess }) {
 
     setLoading(true)
     try {
+      let photoUrl = null
+      if (photo) {
+        const up = await uploadPhoto(photo)
+        photoUrl = up.data.data.url
+      }
       const payload = {
         ...formData,
         roadSegmentId: formData.roadSegmentId ? parseInt(formData.roadSegmentId) : null,
+        photoUrl,
       }
       await submitComplaint(payload)
       setSuccess(true)
@@ -118,6 +127,10 @@ function ReportComplaintModal({ roadSegments, onClose, onSuccess }) {
                   placeholder="Describe what you observed - location details help..."
                   required
                 />
+              </div>
+              <div style={styles.field}>
+                <label style={styles.label}>Photo (taken live with camera)</label>
+                <CameraCapture onCapture={setPhoto} />
               </div>
 
               <div style={styles.actions}>

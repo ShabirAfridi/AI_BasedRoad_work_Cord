@@ -198,6 +198,7 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                     <th style={styles.th}>Department</th>
                     <th style={styles.th}>Road Segment</th>
                     <th style={styles.th}>Dates</th>
+                    <th style={styles.th}>Document</th>
                     <th style={styles.th}>Status</th>
                     <th style={styles.th}>Actions</th>
                   </tr>
@@ -208,6 +209,17 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                       <td style={styles.td}>{req.departmentName}</td>
                       <td style={styles.td}>{req.roadSegmentName}</td>
                       <td style={styles.td}>{req.startDate} → {req.endDate}</td>
+                      <td style={styles.td}>
+                        {req.documentUrl ? (
+                            <a href={`http://localhost:9090${req.documentUrl}`} target="_blank" rel="noreferrer">
+                              <img
+                                  src={`http://localhost:9090${req.documentUrl}`}
+                                  alt="document"
+                                  style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6 }}
+                              />
+                            </a>
+                        ) : '—'}
+                      </td>
                       <td style={styles.td}><StatusBadge status={req.status} /></td>
                       <td style={styles.td}>
                         <div style={styles.actionsCell}>
@@ -270,6 +282,7 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                       <th style={styles.th}>Reported By</th>
                       <th style={styles.th}>Road Segment</th>
                       <th style={styles.th}>Category</th>
+                      <th style={styles.th}>Photo</th>
                       <th style={styles.th}>Status</th>
                       <th style={styles.th}>Actions</th>
                     </tr>
@@ -280,6 +293,17 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                         <td style={styles.td}>{c.reportedByName}</td>
                         <td style={styles.td}>{c.roadSegmentName}</td>
                         <td style={styles.td}>{c.category?.replace(/_/g, ' ')}</td>
+                        <td style={styles.td}>
+                          {c.photoUrl ? (
+                              <a href={`http://localhost:9090${c.photoUrl}`} target="_blank" rel="noreferrer">
+                                <img
+                                    src={`http://localhost:9090${c.photoUrl}`}
+                                    alt="complaint"
+                                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6 }}
+                                />
+                              </a>
+                          ) : '—'}
+                        </td>
                         <td style={styles.td}><StatusBadge status={c.status} /></td>
                         <td style={styles.td}>
                           <div style={styles.actionsCell}>

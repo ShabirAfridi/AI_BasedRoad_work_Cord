@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from 'react'
 import { submitWorkRequest } from '../../api/workRequestApi'
+import CameraCapture from '../../components/CameraCapture'
+import { uploadPhoto } from '../../api/uploadApi'
 import { getRoadSegments } from '../../api/roadSegmentApi'
 
 const WORK_TYPES = [
@@ -23,6 +25,7 @@ function SubmitRequestModal({ onClose, onSuccess }) {
     priority: 2,
   })
   const [error, setError] = useState('')
+  const [photo, setPhoto] = useState(null)
   const [loading, setLoading] = useState(false)
 
   // Load road segments for the dropdown when modal opens
@@ -58,10 +61,16 @@ function SubmitRequestModal({ onClose, onSuccess }) {
     setLoading(true)
 
     try {
+      let documentUrl = null
+      if (photo) {
+        const up = await uploadPhoto(photo)
+        documentUrl = up.data.data.url
+      }
       const payload = {
         ...formData,
         roadSegmentId: parseInt(formData.roadSegmentId),
         priority: parseInt(formData.priority),
+        documentUrl,
       }
       await submitWorkRequest(payload)
       onSuccess()  // tells parent to refresh the list and close modal
@@ -167,6 +176,10 @@ function SubmitRequestModal({ onClose, onSuccess }) {
               onChange={handleChange}
               placeholder="Brief description of the work..."
             />
+          </div>
+          <div style={styles.field}>
+            <label style={styles.label}>Supporting document (photo, taken live with camera)</label>
+            <CameraCapture onCapture={setPhoto} />
           </div>
 
           <div style={styles.actions}>
