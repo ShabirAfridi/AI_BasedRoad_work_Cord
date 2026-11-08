@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="005-create-citizen-complaints" author="shabir">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="citizen_complaints"/></not>
+        </preConditions>
+
+        <createTable tableName="citizen_complaints">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="photo_base64" type="TEXT"/>
+            <column name="road_segment_id" type="BIGINT">
+                <constraints foreignKeyName="fk_complaints_road_segment"
+                             references="road_segments(id)"/>
+            </column>
+            <column name="reported_by" type="BIGINT">
+                <constraints foreignKeyName="fk_complaints_reported_by"
+                             references="users(id)"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="related_request" type="BIGINT">
+                <constraints foreignKeyName="fk_complaints_related_request"
+                             references="work_requests(id)"/>
+            </column>
+            <column name="admin_response" type="TEXT"/>
+            <column name="reported_at" type="TIMESTAMP"/>
+            <column name="resolved_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="citizen_complaints"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

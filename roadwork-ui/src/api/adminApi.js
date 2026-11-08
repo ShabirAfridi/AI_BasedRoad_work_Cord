@@ -36,4 +36,8 @@ export const getAllComplaints = () => api.get('/api/admin/complaints')
 export const getSubmittedComplaints = () => api.get('/api/admin/complaints/submitted')
 export const markComplaintUnderReview = (id) => api.put(`/api/admin/complaints/${id}/review`)
 export const resolveComplaintAdmin = (id, adminResponse, dismiss) =>
+<<<<<<< HEAD
   api.put(`/api/admin/complaints/${id}/resolve`, { adminResponse, dismiss })
+=======
+  api.put(`/api/admin/complaints/${id}/resolve`, { adminResponse, dismiss })
+>>>>>>> 1184d18 (Add Liquibase migrations and application updates)

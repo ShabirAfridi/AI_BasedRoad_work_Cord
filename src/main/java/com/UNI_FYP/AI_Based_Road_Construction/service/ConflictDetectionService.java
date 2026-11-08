@@ -40,11 +40,11 @@ public class ConflictDetectionService {
 
         // Call the overlap query from WorkRequestRepository
         // Finds all active requests on the same road with overlapping dates
-        List<WorkRequest> conflicting = workRequestRepository.findConflicting(
+        List<WorkRequest> conflicting =  workRequestRepository.findConflicting(
                 newRequest.getRoadSegment().getId(),
                 newRequest.getStartDate(),
                 newRequest.getEndDate(),
-                newRequest.getId()   // exclude self
+                newRequest.getId()
         );
 
         if (conflicting.isEmpty()) {

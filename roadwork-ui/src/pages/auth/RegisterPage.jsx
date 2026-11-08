@@ -1,22 +1,38 @@
+<<<<<<< HEAD
 // src/pages/auth/RegisterPage.jsx
 
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { getActiveDepartments } from '../../api/departmentApi'
+=======
+import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../components/Toast'
+import ThemeToggle from '../../components/ThemeToggle'
+
+const DEPARTMENTS = [
+  { id: 1, name: 'WAPDA' },
+  { id: 2, name: 'PTCL' },
+  { id: 3, name: 'SNGPL' },
+]
+>>>>>>> 1184d18 (Add Liquibase migrations and application updates)
 
 function RegisterPage() {
+  const toast = useToast()
   const navigate = useNavigate()
   const { register, isAdmin, isDepartmentUser } = useAuth()
 
   const [formData, setFormData] = useState({
-    fullName:     '',
-    email:        '',
-    password:     '',
-    role:         'CITIZEN',
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    role: 'CITIZEN',
     departmentId: '',
   })
-  const [error,   setError]   = useState('')
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [departments, setDepartments] = useState([])
 
@@ -33,14 +49,25 @@ function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords don't match")
+      toast.error("Passwords don't match")
+      return
+    }
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters')
+      toast.error('Password must be at least 6 characters')
+      return
+    }
+
     setLoading(true)
 
-    // Build payload — only include departmentId if DEPARTMENT_USER
     const payload = {
       fullName: formData.fullName,
-      email:    formData.email,
+      email: formData.email,
       password: formData.password,
-      role:     formData.role,
+      role: formData.role,
       ...(formData.role === 'DEPARTMENT_USER' && {
         departmentId: parseInt(formData.departmentId)
       })
@@ -50,42 +77,61 @@ function RegisterPage() {
     setLoading(false)
 
     if (result.success) {
-      if (isAdmin())               navigate('/admin/dashboard')
+      toast.success('Registration successful — welcome')
+      if (isAdmin()) navigate('/admin/dashboard')
       else if (isDepartmentUser()) navigate('/department/dashboard')
-      else                         navigate('/citizen/map')
+      else navigate('/citizen/map')
     } else {
       setError(result.error)
+      toast.error(result.error || 'Registration failed')
     }
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900 transition-colors duration-200 relative"> {/* dark: page bg */}
 
-        <h2 style={styles.title}>Create Account</h2>
-        <p style={styles.subtitle}>Road Work Coordination System</p>
+      <div className="absolute top-6 right-6"> {/* dark: toggle top-right, matches LoginPage */}
+        <ThemeToggle />
+      </div>
 
-        {error && <div style={styles.error}>{error}</div>}
+      <div className="bg-white dark:bg-slate-800 p-10 rounded-xl shadow-lg dark:shadow-slate-900/50 w-full max-w-[420px] transition-colors duration-200"> {/* dark: card */}
 
-        <form onSubmit={handleSubmit}>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1 text-center"> {/* dark: heading */}
+          Create Account
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 text-center mb-6 text-sm"> {/* dark: subtitle */}
+          Road Work Coordination System
+        </p>
 
-          <div style={styles.field}>
-            <label style={styles.label}>Full Name</label>
+        {error && (
+          <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-4 py-3 rounded-lg mb-4 text-sm"> {/* dark: error banner */}
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} autoComplete="off">
+
+          <div className="mb-4">
+            <label className="block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">Full Name</label> {/* dark: label */}
             <input
-              style={styles.input}
+              className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-[0.95rem] outline-none
+                         bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100
+                         focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200" /* dark: input */
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              placeholder="Shabir Ahmad"
+              placeholder="full name"
               required
             />
           </div>
 
-          <div style={styles.field}>
-            <label style={styles.label}>Email</label>
+          <div className="mb-4">
+            <label className="block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">Email</label> {/* dark: label */}
             <input
-              style={styles.input}
+              className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-[0.95rem] outline-none
+                         bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100
+                         focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200" /* dark: input */
               type="email"
               name="email"
               value={formData.email}
@@ -95,10 +141,12 @@ function RegisterPage() {
             />
           </div>
 
-          <div style={styles.field}>
-            <label style={styles.label}>Password</label>
+          <div className="mb-4">
+            <label className="block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">Password</label> {/* dark: label */}
             <input
-              style={styles.input}
+              className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-[0.95rem] outline-none
+                         bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100
+                         focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200" /* dark: input */
               type="password"
               name="password"
               value={formData.password}
@@ -108,26 +156,50 @@ function RegisterPage() {
             />
           </div>
 
-          <div style={styles.field}>
-            <label style={styles.label}>Role</label>
+          <div className="mb-4">
+            <label className="block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">Confirm Password</label> {/* dark: label */}
+            <input
+              className={`w-full px-3.5 py-2.5 border rounded-lg text-[0.95rem] outline-none
+                          bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100
+                          focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200
+                          ${
+                            formData.confirmPassword && formData.confirmPassword !== formData.password
+                              ? 'border-red-500 dark:border-red-500'
+                              : 'border-slate-300 dark:border-slate-600'
+                          }`}
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Re-enter your password"
+              autoComplete="new-password"
+              required
+            />
+            {formData.confirmPassword && formData.confirmPassword !== formData.password && (
+              <span className="text-red-600 dark:text-red-400 text-xs mt-1 block">Passwords don't match yet</span>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">Role</label> {/* dark: label */}
             <select
-              style={styles.input}
+              className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-[0.95rem] outline-none
+                         bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-colors duration-200" /* dark: select */
               name="role"
               value={formData.role}
               onChange={handleChange}
             >
               <option value="CITIZEN">Citizen</option>
               <option value="DEPARTMENT_USER">Department User</option>
-              <option value="ADMIN">Admin</option>
             </select>
           </div>
 
-          {/* Show department dropdown only when DEPARTMENT_USER is selected */}
           {formData.role === 'DEPARTMENT_USER' && (
-            <div style={styles.field}>
-              <label style={styles.label}>Department</label>
+            <div className="mb-4">
+              <label className="block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">Department</label> {/* dark: label */}
               <select
-                style={styles.input}
+                className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-[0.95rem] outline-none
+                           bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-colors duration-200" /* dark: select */
                 name="departmentId"
                 value={formData.departmentId}
                 onChange={handleChange}
@@ -144,7 +216,11 @@ function RegisterPage() {
           )}
 
           <button
-            style={loading ? styles.buttonDisabled : styles.button}
+            className={`w-full py-3 rounded-lg text-white font-semibold mt-2 transition-colors duration-200 ${
+              loading
+                ? 'bg-blue-300 dark:bg-blue-800 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer'
+            }`}
             type="submit"
             disabled={loading}
           >
@@ -153,105 +229,16 @@ function RegisterPage() {
 
         </form>
 
-        <p style={styles.footer}>
+        <p className="text-center mt-5 text-sm text-slate-500 dark:text-slate-400"> {/* dark: footer */}
           Already have an account?{' '}
-          <Link to="/login" style={styles.link}>Sign in</Link>
+          <Link to="/login" className="text-blue-600 dark:text-blue-400 font-medium hover:underline"> {/* dark: link */}
+            Sign in
+          </Link>
         </p>
 
       </div>
     </div>
   )
-}
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f0f2f5',
-  },
-  card: {
-    background: '#fff',
-    padding: '2.5rem',
-    borderRadius: '12px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-    width: '100%',
-    maxWidth: '420px',
-  },
-  title: {
-    fontSize: '1.6rem',
-    fontWeight: '700',
-    color: '#1a1a2e',
-    marginBottom: '0.25rem',
-    textAlign: 'center',
-  },
-  subtitle: {
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: '1.5rem',
-    fontSize: '0.9rem',
-  },
-  error: {
-    background: '#fee2e2',
-    color: '#991b1b',
-    padding: '0.75rem 1rem',
-    borderRadius: '8px',
-    marginBottom: '1rem',
-    fontSize: '0.875rem',
-  },
-  field: { marginBottom: '1rem' },
-  label: {
-    display: 'block',
-    marginBottom: '0.4rem',
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    color: '#374151',
-  },
-  input: {
-    width: '100%',
-    padding: '0.65rem 0.9rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    fontSize: '0.95rem',
-    outline: 'none',
-    boxSizing: 'border-box',
-    background: '#fff',
-  },
-  button: {
-    width: '100%',
-    padding: '0.75rem',
-    background: '#2563eb',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '1rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    marginTop: '0.5rem',
-  },
-  buttonDisabled: {
-    width: '100%',
-    padding: '0.75rem',
-    background: '#93c5fd',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '1rem',
-    cursor: 'not-allowed',
-    marginTop: '0.5rem',
-  },
-  footer: {
-    textAlign: 'center',
-    marginTop: '1.25rem',
-    fontSize: '0.875rem',
-    color: '#6b7280',
-  },
-  link: {
-    color: '#2563eb',
-    textDecoration: 'none',
-    fontWeight: '500',
-  },
 }
 
 export default RegisterPage

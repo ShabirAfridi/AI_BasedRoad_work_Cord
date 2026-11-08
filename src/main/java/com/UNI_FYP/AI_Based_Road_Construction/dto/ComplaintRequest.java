@@ -20,5 +20,7 @@ public class ComplaintRequest {
     //optional - compliant is about specific work Request
      private Long relatedRequestId;
 
+     private String photoBase64;
+
 
 }

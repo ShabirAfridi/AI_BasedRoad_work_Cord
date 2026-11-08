@@ -56,6 +56,7 @@ public class CitizenComplaintService {
 
         CitizenComplaint complaint = CitizenComplaint.builder()
                 .roadSegment(roadSegment)
+                .photoBase64(request.getPhotoBase64())
                 .reportedBy(currentUser)  // null = anonymous
                 .description(request.getDescription())
                 .category(request.getCategory() != null
@@ -151,6 +152,7 @@ public class CitizenComplaintService {
                 .id(c.getId())
                 .roadSegmentName(c.getRoadSegment() != null
                         ? c.getRoadSegment().getName() : "Unspecified")
+                .photoBase64(c.getPhotoBase64())
                 .reportedByName(c.getReportedBy() != null
                         ? c.getReportedBy().getFullName() : "Anonymous")
                 .description(c.getDescription())

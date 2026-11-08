@@ -21,6 +21,23 @@ export function AuthProvider({ children }) {
     return sessionStorage.getItem('token') || null
   })
 
+    const setAuthFromResponse = (data) => {
+      const userObj = {
+        email:        data.email,
+        fullName:     data.fullName,
+        role:         data.role,
+        departmentId: data.departmentId,
+      }
+      sessionStorage.setItem('token', data.token)
+          sessionStorage.setItem('user', JSON.stringify(userObj))
+
+          setToken(data.token)
+          setUser(userObj)
+
+          return userObj
+        }
+
+
   // ── LOGIN ────────────────────────────────────────────────────
   // Called by LoginPage when user submits the form
   // Returns { success, error }
@@ -34,21 +51,8 @@ export function AuthProvider({ children }) {
       if (!data || !data.token) {
         return { success: false, error: 'Invalid response from server' }
       }
-         const userObj = {
-              email:        data.email,
-              fullName:     data.fullName,
-              role:         data.role,
-              departmentId: data.departmentId,
-            }
+         const userObj = setAuthFromResponse(data)
 
-    sessionStorage.setItem('token', data.token)
-         sessionStorage.setItem('user', JSON.stringify(userObj))
-
-         setToken(data.token)
-         setUser(userObj)
-
-       // Return the fresh user object so the caller (LoginPage)
-      // does not rely on React state that hasn't re-rendered yet
       return { success: true,userObj }
     } catch (error) {
       return {
@@ -64,22 +68,7 @@ export function AuthProvider({ children }) {
       const response = await registerApi(formData)
       const data = response.data.data
 
-      sessionStorage.setItem('token', data.token)
-      sessionStorage.setItem('user', JSON.stringify({
-        email:        data.email,
-        fullName:     data.fullName,
-        role:         data.role,
-        departmentId: data.departmentId,
-      }))
-
-      setToken(data.token)
-      setUser({
-        email:        data.email,
-        fullName:     data.fullName,
-        role:         data.role,
-        departmentId: data.departmentId,
-      })
-
+      const userObj  = setAuthFromResponse(data)
       return { success: true }
     } catch (error) {
       return {
@@ -106,7 +95,7 @@ export function AuthProvider({ children }) {
   return (
     <AuthContext.Provider value={{
       user, token,
-      login, register, logout,
+      login, register, logout,setAuthFromResponse,
       isAdmin, isDepartmentUser, isCitizen, isLoggedIn
     }}>
       {children}

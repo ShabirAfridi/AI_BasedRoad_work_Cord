@@ -210,4 +210,18 @@ public class NotificationService {
             log.error("Failed to send email to {} — reason: {}", toEmail, e.getMessage());
         }
     }
+    @Async
+    public void sendPasswordResetEmail(String email, String fullName, String link) {
+        String subject = "Reset Your Password ";
+        String body = """
+                hi %s,
+                We Received a request to rest a password.
+                this link is valid for 30 minutes:
+                %s
+                If you didn't request this, you can safely ignore this email.
+                
+                Road Work Coordination System
+                """.formatted(fullName,link);
+        sendEmail(email,subject,body);
+    }
 }
