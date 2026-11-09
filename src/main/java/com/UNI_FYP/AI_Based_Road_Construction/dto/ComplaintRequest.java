@@ -21,5 +21,7 @@ public class ComplaintRequest {
      private Long relatedRequestId;
     private String photoUrl;
 
+     private String photoBase64;
+
 
 }

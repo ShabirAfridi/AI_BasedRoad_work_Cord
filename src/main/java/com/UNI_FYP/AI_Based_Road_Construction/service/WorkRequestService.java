@@ -190,7 +190,7 @@ public class WorkRequestService {
     // Used by Leaflet.js map to show active work
     // ─────────────────────────────────────────────────────────────
     public List<WorkRequestResponse> getActive() {
-        return workRequestRepository.findAllWithDetails()
+        return workRequestRepository.findAllActiveWithDetails()
                 .stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());

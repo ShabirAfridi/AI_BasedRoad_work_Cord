@@ -22,7 +22,7 @@ public interface Conflictrepository extends JpaRepository<Conflict,Long>{
             WHERE (c.requestA.id = :requestAId AND c.requestB.id = :requestBId)
             OR    (c.requestA.id = :requestBId AND c.requestB.id = :requestAId)
             """)
-    Optional<Conflict> findByRequestPair(
+          Optional<Conflict> findByRequestPair(
             @Param("requestAId") Long requestAId,
             @Param("requestBId") Long requestBId
     );

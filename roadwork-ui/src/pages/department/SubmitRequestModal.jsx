@@ -14,8 +14,14 @@ const WORK_TYPES = [
 
 function SubmitRequestModal({ onClose, onSuccess }) {
   const [roadSegments, setRoadSegments] = useState([])
+<<<<<<< HEAD
   const [segmentsLoading, setSegmentsLoading] = useState(false)
   const [roadSegmentsError, setRoadSegmentsError] = useState('')
+=======
+  const [segmentsLoading, setSegmentsLoading]   = useState(true)
+    const [roadSegmentsError, setRoadSegmentsError] = useState('')
+
+>>>>>>> 1184d18 (Add Liquibase migrations and application updates)
   const [formData, setFormData] = useState({
     roadSegmentId: '',
     workType: 'WATER_PIPE',
@@ -37,7 +43,11 @@ function SubmitRequestModal({ onClose, onSuccess }) {
     setRoadSegmentsError("")
     getRoadSegments()
       .then(res =>{
+<<<<<<< HEAD
       const list = res.data.data || [];
+=======
+      const list = res.data.data || []
+>>>>>>> 1184d18 (Add Liquibase migrations and application updates)
       setRoadSegments(list);
       if(list.length===0){
       setRoadSegmentsError(
@@ -91,26 +101,31 @@ function SubmitRequestModal({ onClose, onSuccess }) {
         </div>
 
         {error && <div style={styles.error}>{error}</div>}
-
         <form onSubmit={handleSubmit}>
 
-          <div style={styles.field}>
-            <label style={styles.label}>Road Segment</label>
-            <select
-              style={styles.input}
-              name="roadSegmentId"
-              value={formData.roadSegmentId}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select road segment</option>
-              {roadSegments.map(seg => (
-                <option key={seg.id} value={seg.id}>
-                  {seg.name} — {seg.city}
-                </option>
-              ))}
-            </select>
-          </div>
+         <div style={styles.field}>
+           <label style={styles.label}>Road Segment</label>
+           {segmentsLoading ? (
+             <div style={{ fontSize: '0.85rem', color: '#9ca3af' }}>Loading road segments...</div>
+           ) : roadSegmentsError ? (
+             <div style={{ fontSize: '0.85rem', color: '#dc2626' }}>{roadSegmentsError}</div>
+           ) : (
+             <select
+               style={styles.input}
+               name="roadSegmentId"
+               value={formData.roadSegmentId}
+               onChange={handleChange}
+               required
+             >
+               <option value="">Select road segment</option>
+               {roadSegments.map(seg => (
+                 <option key={seg.id} value={seg.id}>
+                   {seg.name} — {seg.city}
+                 </option>
+               ))}
+             </select>
+           )}
+         </div>
 
           <div style={styles.field}>
             <label style={styles.label}>Work Type</label>

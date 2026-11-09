@@ -21,12 +21,13 @@ public class CitizenComplaint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Which road segment is being complained about
+    @Column(name = "photo_base64",columnDefinition = "TEXT")
+    private String photoBase64;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "road_segment_id")
     private RoadSegment roadSegment;
 
-    // null = anonymous complaint (citizens don't need to log in)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_by")
     private User reportedBy;

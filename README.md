@@ -91,8 +91,10 @@ See [`backend/README.md`](backend/README.md) and [`frontend/README.md`](frontend
 
 ## Author
 
-**Shabir Ahmad**
-Final Year BCS Student — Abdul Wali Khan University, Mardan
+**Shabir Ahmad**,
+**Awias Ali Sha**,
+**Sohaima**,
+Final Year BCS Students — Abdul Wali Khan University, Mardan
 [LinkedIn](#) · [Portfolio](#)
 
 ## License

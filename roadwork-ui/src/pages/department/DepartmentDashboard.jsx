@@ -1,5 +1,3 @@
-// Main dashboard for DEPARTMENT_USER role
-// Shows: hero banner, KPI stat cards, list of own requests, submit new request, conflict alerts
 
 import { useState, useEffect } from 'react'
 import { FiClock, FiCheckCircle, FiAlertTriangle, FiCheckSquare } from 'react-icons/fi'
@@ -54,7 +52,7 @@ function DepartmentDashboard() {
   const completedCount = requests.filter(r => r.status === 'COMPLETED').length
 
   return (
-    <DashboardLayout>
+<DashboardLayout conflictCount={conflictCount}>
 
       <HeroSection onNewRequest={() => setShowModal(true)} />
 
@@ -66,7 +64,7 @@ function DepartmentDashboard() {
       </div>
 
       {conflictCount > 0 && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-3.5 text-sm font-medium text-red-800">
+        <div  id="conflict-banner" className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-3.5 text-sm font-medium text-red-800">
           You have {conflictCount} work request{conflictCount > 1 ? 's' : ''} with
           scheduling conflicts. These are pending admin review.
         </div>
@@ -74,7 +72,7 @@ function DepartmentDashboard() {
 
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 px-6 py-5">
+        <div id="requests-table" className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 px-6 py-5">
           <div>
             <h2 className="text-lg font-bold text-slate-900">My Work Requests</h2>
             <p className="mt-0.5 text-sm text-slate-500">

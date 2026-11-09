@@ -1,6 +1,6 @@
 // Main dashboard for ADMIN role
 // Two tabs: Work Requests (approve/reject) and Conflicts (resolve)
-
+import DelayPredictionPanel from '../../components/DelayPredictionPanel'
 import { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar'
 import StatusBadge from '../../components/StatusBadge'
@@ -132,22 +132,6 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
       <Navbar title="Admin Dashboard" />
 
       <div style={styles.container}>
-
-        <div style={styles.statsGrid}>
-          <div style={styles.statCard}>
-            <div style={styles.statValue}>{pendingCount}</div>
-            <div style={styles.statLabel}>Pending Requests</div>
-          </div>
-          <div style={{ ...styles.statCard, borderLeft: '4px solid #dc2626' }}>
-            <div style={{ ...styles.statValue, color: '#dc2626' }}>{conflictCount}</div>
-            <div style={styles.statLabel}>Active Conflicts</div>
-          </div>
-          <div style={{ ...styles.statCard, borderLeft: '4px solid #16a34a' }}>
-            <div style={{ ...styles.statValue, color: '#16a34a' }}>{approvedCount}</div>
-            <div style={styles.statLabel}>Approved</div>
-          </div>
-        </div>
-
         <div style={styles.mainTabs}>
           <button
             style={activeTab === 'requests' ? styles.mainTabActive : styles.mainTab}
@@ -223,6 +207,7 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                     <th style={styles.th}>Document</th>
                     <th style={styles.th}>Inspector</th>
                     <th style={styles.th}>Status</th>
+                    <th style={styles.th}>AI Insight</th>
                     <th style={styles.th}>Actions</th>
                   </tr>
                 </thead>
@@ -247,6 +232,18 @@ const [selectedComplaint, setSelectedComplaint] = useState(null)
                         <AssignInspectorCell request={req} inspectors={inspectors} onAssigned={loadData} />
                       </td>
                       <td style={styles.td}><StatusBadge status={req.status} /></td>
+                          <td style={styles.td}>
+                            <DelayPredictionPanel
+                              workType={req.workType}
+                              plannedDurationDays={
+                                Math.max(1, Math.round(
+                                  (new Date(req.endDate) - new Date(req.startDate))
+                                  / (1000 * 60 * 60 * 24)
+                                ))
+                              }
+                              priority={req.priority}
+                            />
+                          </td>
                       <td style={styles.td}>
                         <div style={styles.actionsCell}>
                           {req.status === 'PENDING' && (

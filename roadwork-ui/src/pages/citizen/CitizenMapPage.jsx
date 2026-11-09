@@ -119,18 +119,6 @@ function CitizenMapPage() {
           </>
         )}
 
-        <div style={styles.reportBanner}>
-          <div>
-            <div style={styles.reportBannerTitle}>Notice something wrong?</div>
-            <div style={styles.reportBannerText}>
-              Report unauthorized digging, road damage, or delays - no account needed.
-            </div>
-          </div>
-          <button style={styles.reportBtnSecondary} onClick={() => setShowReportModal(true)}>
-            Report an Issue
-          </button>
-        </div>
-
       </div>
 
       {showReportModal && (

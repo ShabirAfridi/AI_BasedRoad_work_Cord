@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@keyframes spin {
+ to { transform: rotate(360deg);
+ } }
+
+.spinner {
+  width: 1rem; height: 1rem; border-radius: 50%;
+  border: 2px solid currentColor; border-top-color: transparent;
+  animation: spin 0.7s linear infinite; display: inline-block;
+}
 html,
 body,
 #root {
@@ -9,5 +20,11 @@ body,
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  background: #f5f7fa;
 }
+:root {
+  --bg: #f0f2f5; --card: #ffffff; --text: #1a1a2e; --border: #d1d5db;
+}
+.dark {
+  --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155;
+}
+body { background: var(--bg); color: var(--text); }

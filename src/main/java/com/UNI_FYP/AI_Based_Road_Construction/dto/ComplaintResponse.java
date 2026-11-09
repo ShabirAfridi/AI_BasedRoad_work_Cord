@@ -24,4 +24,5 @@ public class ComplaintResponse {
     private String photoUrl;
     private LocalDateTime reportedAt;
     private LocalDateTime resolvedAt;
+    private String photoBase64;
 }
